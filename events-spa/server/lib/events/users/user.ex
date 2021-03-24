@@ -16,6 +16,11 @@ defmodule Events.Users.User do
 
   @doc false
   def changeset(user, attrs) do
+    attrs = if attrs["password"] != "" do
+      Map.put(attrrs, "password_hash", Argon2.hash_pwd_salt(attrs["password"]))
+    else
+      attrs
+    end
     user
     |> cast(attrs, [:name, :email, :password_hash,:photo_hash])
     |> validate_required([:name, :email, :password_hash])
