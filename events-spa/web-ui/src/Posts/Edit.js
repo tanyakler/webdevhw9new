@@ -2,25 +2,20 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { create_post, fetch_posts } from '../api';
+import { create_post, fetch_posts, get_post } from '../api';
 
-export default function PostsNew() {
+export default function PostsEdit() {
   let history = useHistory();
-  let [post, setPost] = useState({});
 
-  function submit(ev) {
-    ev.preventDefault();
-    console.log(ev);
-    console.log(post);
-    create_post(post).then((resp) => {
-      if (resp["errors"]) {
-        console.log("errors", resp.errors);
-      }
-      else {
-        history.push("/");
-        fetch_posts();
-      }
-    });
+
+  const ogpost = get_post(posts, id);
+
+  let [post, setPost] = useState(ogpost);
+
+  function update(field, ev) {
+    let new = Object.assign({}, post);
+    update[field] = ev.target.value;
+    setPost(update);
   }
 
   function updateName(ev) {
@@ -41,6 +36,21 @@ export default function PostsNew() {
     setPost(p1);
   }
 
+  function submit(ev) {
+    ev.preventDefault();
+    console.log(ev);
+    console.log(post);
+    create_post(post).then((resp) => {
+      if (resp["errors"]) {
+        console.log("errors", resp.errors);
+      }
+      else {
+        history.push("/");
+        fetch_posts();
+      }
+    });
+	}
+
   return (
     <Row>
       <Col>
@@ -49,23 +59,23 @@ export default function PostsNew() {
           <Form.Group>
             <Form.Label>Name</Form.Label>
             <Form.Control type="textarea"
-                          onChange={updateName}
+                          onChange={(ev) => update("name", ev)}
                           value={post.name} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Date</Form.Label>
             <Form.Control as="textarea"
-                          onChange={updateDate}
+                          onChange={(ev) => update("date", ev)}
                           value={post.date} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Description</Form.Label>
             <Form.Control as="textarea"
-                          onChange={updateDescription}
+                          onChange={(ev) => update("description", ev)}
                           value={post.description} />
           </Form.Group>
           <Button variant="primary" type="submit">
-            Post!
+            update
           </Button>
         </Form>
       </Col>
