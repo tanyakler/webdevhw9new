@@ -1,0 +1,18 @@
+[Unit]
+Description=HW07; Events App SPA
+
+[Service]
+Type=simple
+User=eventsspa
+Group=events
+Restart=on-failure
+Environment=MIX_ENV=prod
+Environment=PORT=4977
+Environment=PROD=true
+Environment=LANG=en_US.UTF-8
+
+WorkingDirectory=/home/eventsspa/webdevhw9new/events_dev
+ExecStart=/bin/bash /home/eventsspa/webdevhw9new/events_dev/start.sh
+
+[Install]
+WantedBy=multi-user.target
